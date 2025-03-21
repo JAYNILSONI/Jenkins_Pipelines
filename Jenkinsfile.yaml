@@ -1,38 +1,38 @@
 pipeline:
   agent:
     any: true
-  
+
   stages:
+
     - stage: "Checkout_Stage"
-    steps:
-      - echo "Checking out the Repository"
-      - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
-    
+      steps:
+        - echo "Checking out the Repository"
+        - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
+
     - stage: "Clean_Stage"
-    steps:
-      - echo "Cleaning the Workspace"
-      - bat 'mvn clean'
-    
+      steps:
+        - echo "Cleaning the Workspace"
+        - bat 'mvn clean'
+
     - stage: "Build_Stage"
-    steps:
-      - echo "Compiling the Project"
-      - bat 'mvn compile'
-    
+      steps:
+        - echo "Compiling the Project"
+        - bat 'mvn compile'
+
     - stage: "Test_Stage"
-    steps:
-      - echo "Testing the Project"
-      - bat 'mvn test'
-    
+      steps:
+        - echo "Testing the Project"
+        - bat 'mvn test'
+
     - stage: "Package_Stage"
-    steps:
-      - echo "Packaging the Project"
-      - bat 'mvn package'
-    
+      steps:
+        - echo "Packaging the Project"
+        - bat 'mvn package'
+
     - stage: "Execute_Stage"
-    steps:
-      - echo "Executing the Package"
-      - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
-  
+      steps:
+        - echo "Executing the Package"
+        - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
   post:
     always:
       - echo "Performing Cleanup of Workspace"
