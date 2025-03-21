@@ -1,8 +1,6 @@
 pipeline:
   agent any
-  environment:
-    MY_ENV_VAR: 'value'
-  stages:
+    stages:
     - stage: 'Build'
       steps:
         - sh: 'echo "Building the project..."'
