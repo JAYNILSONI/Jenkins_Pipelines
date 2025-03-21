@@ -1,15 +1,29 @@
 pipeline:
   agent:
     any: true
-  environment:
-    KEY1: "VAL1"
+
   stages:
-  - stage: "Build Stage"
-    steps:
-    - echo "Build"
-  - stage: "Test Stage"
-    steps:
-    - echo "Test"
-  - stage: "Deploy Stage"
-    steps:
-    - echo "Deploy"
+    - stage: "Clean_Stage"
+      steps:
+        - echo "Cleaning the Workspace"
+        - bat 'mvn clean'
+
+    - stage: "Build_Stage"
+      steps:
+        - echo "Compiling the Project"
+        - bat 'mvn compile'
+
+    - stage: "Test_Stage"
+      steps:
+        - echo "Testing the Project"
+        - bat 'mvn test'
+
+    - stage: "Package_Stage"
+      steps:
+        - echo "Packaging the Project"
+        - bat 'mvn package'
+
+    - stage: "Execute_Stage"
+      steps:
+        - echo "Executing the Package"
+        - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
