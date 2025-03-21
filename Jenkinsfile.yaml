@@ -3,3 +3,7 @@ pipeline:
     any: true
   environment:
     KEY1: "VAL1"
+  stages:
+  - stage: "Test Stage"
+    steps:
+    - cls
