@@ -1,18 +1,14 @@
 pipeline:
   agent: any
-  
   environment:
     KEY1: "VAL1"
-  
   stages:
-    - stage: 'Build'
+    - name: "Build"
       steps:
-        - bat: 'echo "Building the project..."'
-    
-    - stage: 'Test'
+        - bat: echo "Building the project..."
+    - name: "Test"
       steps:
-        - bat: 'echo "Running tests..."'
-    
-    - stage: 'Deploy'
+        - bat: echo "Running tests..."
+    - name: "Deploy"
       steps:
-        - bat: 'echo "Deploying application..."'
+        - bat: echo "Deploying application..."
