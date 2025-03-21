@@ -11,7 +11,7 @@ pipeline:
             scm:
               git:
                 url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
-                branch: 'master'
+                branch: 'main'
                 cleanBeforeCheckout: true
                 shallow: true
                 depth: 1
