@@ -4,5 +4,8 @@ pipeline:
     KEY1: "VAL1"
   stages:
     - stage: 'Build'
+      steps:
     - stage: 'Test'
+      steps:
     - stage: 'Deploy'
+      steps:
