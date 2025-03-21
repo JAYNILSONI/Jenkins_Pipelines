@@ -3,16 +3,3 @@ pipeline:
     any: true
   environment:
     KEY1: "VAL1"
-  stages:
-    - stage:
-        name: "Build"
-        steps:
-          - bat: 'echo "Building the project..."'
-    - stage:
-        name: "Test"
-        steps:
-          - bat: 'echo "Running tests..."'
-    - stage:
-        name: "Deploy"
-        steps:
-          - bat: 'echo "Deploying application..."'
