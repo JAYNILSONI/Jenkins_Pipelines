@@ -3,6 +3,19 @@ pipeline:
     any: true
 
   stages:
+    - stage: "Checkout_Stage"
+        steps:
+          script:
+            def gitRepoUrl = 'git@github.com:JAYNILSONI/Jenkins_Pipelines.git'
+            checkout([
+              $class: 'GitSCM',
+              branches: [[name: '*/main']],
+              userRemoteConfigs: [[url: gitRepoUrl]],
+              extensions: [
+                [$class: 'CleanBeforeCheckout'],
+                [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]
+              ]
+            ])
     - stage: "Clean_Stage"
       steps:
         - echo "Cleaning the Workspace"
