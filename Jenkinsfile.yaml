@@ -6,16 +6,15 @@ pipeline:
 
     - stage: "Checkout_Stage"
       steps:
-        echo "Checking out the Repository"
-        checkout([
-          $class: 'GitSCM',
-          branches: [[name: '*/master']],
-          userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
-          extensions: [
-            [$class: 'CleanBeforeCheckout'],
-            [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]
-          ]
-        ])
+        - echo "Checking out the Repository"
+        - checkout:
+            scm:
+              git:
+                url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
+                branch: 'master'
+                cleanBeforeCheckout: true
+                shallow: true
+                depth: 1
 
     - stage: "Clean_Stage"
       steps:
