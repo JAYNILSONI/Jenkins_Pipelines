@@ -4,6 +4,12 @@ pipeline:
   environment:
     KEY1: "VAL1"
   stages:
+  - stage: "Build Stage"
+    steps:
+    - echo "Build"
   - stage: "Test Stage"
     steps:
     - echo "Test"
+  - stage: "Deploy Stage"
+    steps:
+    - echo "Deploy"
