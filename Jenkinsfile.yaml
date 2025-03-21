@@ -8,6 +8,7 @@ pipeline:
       steps:
         - echo "Checking out the Repository"
         - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
+        - bat 'cd Jenkins_Pipelines'
 
     - stage: "Clean_Stage"
       steps:
