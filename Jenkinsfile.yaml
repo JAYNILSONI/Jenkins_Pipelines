@@ -1,43 +1,38 @@
 pipeline:
-  agent:
-    any: true
+  agent any
 
   stages:
 
     - stage: "Checkout_Stage"
       steps:
         - echo "Checking out the Repository"
-        - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
+        - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
 
     - stage: "Clean_Stage"
       steps:
         - echo "Cleaning the Workspace"
-        - bat 'cd Jenkins_Pipelines'
         - bat 'mvn clean'
 
     - stage: "Build_Stage"
       steps:
         - echo "Compiling the Project"
-        - bat 'cd Jenkins_Pipelines'
         - bat 'mvn compile'
 
     - stage: "Test_Stage"
       steps:
         - echo "Testing the Project"
-        - bat 'cd Jenkins_Pipelines'
         - bat 'mvn test'
 
     - stage: "Package_Stage"
       steps:
         - echo "Packaging the Project"
-        - bat 'cd Jenkins_Pipelines'
         - bat 'mvn package'
 
     - stage: "Execute_Stage"
       steps:
         - echo "Executing the Package"
-        - bat 'cd Jenkins_Pipelines'
         - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
+
   post:
     always:
       - echo "Performing Cleanup of Workspace"
