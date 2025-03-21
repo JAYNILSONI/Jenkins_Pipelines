@@ -1,22 +1,27 @@
-pipeline:
-  agent:
-    any: true
-  
-  environment:
-    KEY1: "VAL1"
-  
-  stages:
-    - name: 'Build'
-      steps:
-        - bat:
-            script: 'echo "Building the project..."'
+pipeline {
+    agent any
     
-    - name: 'Test'
-      steps:
-        - bat:
-            script: 'echo "Running tests..."'
+    environment {
+        KEY1 = "VAL1"
+    }
     
-    - name: 'Deploy'
-      steps:
-        - bat:
-            script: 'echo "Deploying application..."'
+    stages {
+        stage('Build') {
+            steps {
+                bat 'echo "Building the project..."'
+            }
+        }
+        
+        stage('Test') {
+            steps {
+                bat 'echo "Running tests..."'
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+                bat 'echo "Deploying application..."'
+            }
+        }
+    }
+}
