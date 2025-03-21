@@ -7,14 +7,7 @@ pipeline:
     - stage: "Checkout_Stage"
       steps:
         - echo "Checking out the Repository"
-        - checkout:
-            scm:
-              git:
-                url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
-                branch: 'main'
-                cleanBeforeCheckout: true
-                shallow: true
-                depth: 1
+        - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
 
     - stage: "Clean_Stage"
       steps:
