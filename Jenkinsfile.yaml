@@ -6,4 +6,4 @@ pipeline:
   stages:
   - stage: "Test Stage"
     steps:
-    - cls
+    - echo "Test"
