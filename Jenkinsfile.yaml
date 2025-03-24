@@ -6,11 +6,12 @@ pipeline:
     - stage: "Checkout_Stage"
       steps:
         - echo "Checking out the Repository"
-        - checkout([$class: 'GitSCM',
-            branches: [[name: '*/dev']],
-            userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
-            extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
-          ])
+        - script: |
+            checkout([$class: 'GitSCM',
+              branches: [[name: '*/dev']],
+              userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
+              extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+            ])
 
     - stage: "Dependence_Clean_Stage"
       steps:
