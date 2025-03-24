@@ -1,7 +1,0 @@
-checkout_template:
-  stage: "Checkout_Stage"
-  steps:
-    - echo "Cleaning up the Workspace"
-    - deleteDir()
-    - echo "Checking out the Repository"
-    - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'

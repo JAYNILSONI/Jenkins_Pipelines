@@ -1,5 +1,0 @@
-test_template:
-  stage: "Test_Stage"
-  steps:
-    - echo "Testing the Project"
-    - bat 'mvn test'

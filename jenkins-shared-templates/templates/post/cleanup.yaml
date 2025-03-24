@@ -1,5 +1,0 @@
-cleanup_template:
-  post:
-    always:
-      - echo "Performing Cleanup of Workspace"
-      - deleteDir()

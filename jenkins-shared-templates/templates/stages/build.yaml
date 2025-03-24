@@ -1,5 +1,0 @@
-build_template:
-  stage: "Build_Stage"
-  steps:
-    - echo "Compiling the Project"
-    - bat 'mvn compile'

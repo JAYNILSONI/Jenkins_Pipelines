@@ -1,5 +1,0 @@
-execute_template:
-  stage: "Execute_Stage"
-  steps:
-    - echo "Executing the Package"
-    - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'

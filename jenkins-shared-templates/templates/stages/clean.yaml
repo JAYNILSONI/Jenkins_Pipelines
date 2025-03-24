@@ -1,5 +1,0 @@
-clean_template:
-  stage: "Clean_Stage"
-  steps:
-    - echo "Cleaning the Workspace"
-    - bat 'mvn clean'

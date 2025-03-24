@@ -1,5 +1,0 @@
-package_template:
-  stage: "Package_Stage"
-  steps:
-    - echo "Packaging the Project"
-    - bat 'mvn package'
