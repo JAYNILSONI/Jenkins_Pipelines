@@ -1,24 +1,37 @@
 pipeline:
   agent: any
   
-  # Import stage templates
-  imports:
-    - templates/stages/checkout.yaml
-    - templates/stages/clean.yaml
-    - templates/stages/build.yaml
-    - templates/stages/test.yaml
-    - templates/stages/package.yaml
-    - templates/stages/execute.yaml
-    - templates/post/cleanup.yaml
-  
-  # Define the pipeline using the imported templates
   stages:
-    - !include checkout_template
-    - !include clean_template
-    - !include build_template
-    - !include test_template
-    - !include package_template
-    - !include execute_template
+    - template: stages/checkout.yaml
+    - template: stages/clean.yaml
+    - template: stages/build.yaml
+    - template: stages/test.yaml
+    - template: stages/package.yaml
+    - template: stages/execute.yaml
   
-  # Include post actions
-  post: !include cleanup_template.post
+  post:
+    always:
+      - template: post/cleanup.yaml
+
+  
+  # # Import stage templates
+  # imports:
+  #   - templates/stages/checkout.yaml
+  #   - templates/stages/clean.yaml
+  #   - templates/stages/build.yaml
+  #   - templates/stages/test.yaml
+  #   - templates/stages/package.yaml
+  #   - templates/stages/execute.yaml
+  #   - templates/post/cleanup.yaml
+  
+  # # Define the pipeline using the imported templates
+  # stages:
+  #   - !include checkout_template
+  #   - !include clean_template
+  #   - !include build_template
+  #   - !include test_template
+  #   - !include package_template
+  #   - !include execute_template
+  
+  # # Include post actions
+  # post: !include cleanup_template.post
