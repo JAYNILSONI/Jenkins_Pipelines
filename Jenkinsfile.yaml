@@ -3,11 +3,14 @@ pipeline:
     any: true
 
   stages:
-
-    # - stage: "Checkout_Stage"
-    #   steps:
-    #     - echo "Checking out the Repository"
-    #     - checkout scm
+    - stage: "Checkout_Stage"
+      steps:
+        - echo "Checking out the Repository"
+        - checkout([$class: 'GitSCM',
+            branches: [[name: '*/dev']],
+            userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
+            extensions: [[$class: 'CleanBeforeCheckout'], [$class: 'CloneOption', noTags: false, shallow: true, depth: 1]]
+          ])
 
     - stage: "Dependence_Clean_Stage"
       steps:
@@ -46,6 +49,7 @@ pipeline:
         - echo "Pushing Docker Image to Registry"
         - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
         - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
+
   post:
     always:
       - echo "Performing Cleanup of Workspace"
