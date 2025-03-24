@@ -4,13 +4,6 @@ pipeline:
 
   stages:
 
-    # - stage: "Checkout_Stage"
-    #   steps:
-    #     - echo "Cleaning up the Workspace"
-    #     - deleteDir()
-    #     - echo "Checking out the Repository"
-    #     - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
-
     - stage: "Checkout_Stage"
       steps:
         - echo "Checking out the Repository"
@@ -18,9 +11,9 @@ pipeline:
             branches: [[name: '*/main']], 
             userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']]])
 
-    - stage: "Clean_Stage"
+    - stage: "Dependence_Clean_Stage"
       steps:
-        - echo "Cleaning the Workspace"
+        - echo "Cleaning the Workspace Dependence files"
         - bat 'mvn clean'
 
     - stage: "Build_Stage"
@@ -42,6 +35,19 @@ pipeline:
       steps:
         - echo "Executing the Package"
         - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
+        
+    - stage: "Docker_Stage"
+      steps:
+        - echo "Building Docker Image"
+        - bat 'docker build -t Jhelloworld-app:${BUILD_NUMBER} .'
+        
+        - echo "Tagging Docker Image"
+        - bat 'docker tag Jhelloworld-app:${BUILD_NUMBER} ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
+        - bat 'docker tag Jhelloworld-app:${BUILD_NUMBER} ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
+        
+        - echo "Pushing Docker Image to Registry"
+        - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
+        - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
   post:
     always:
       - echo "Performing Cleanup of Workspace"
