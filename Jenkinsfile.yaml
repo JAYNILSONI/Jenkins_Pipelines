@@ -1,45 +1,40 @@
 pipeline:
-  agent: any
+  agent:
+    any: true
+
   stages:
+
     - stage: "Checkout_Stage"
       steps:
-        - script: >
-            def checkoutScript = '''
-              echo "Checking out the repository"
-              def scmConfig = [
-                '$class': 'GitSCM',
-                branches: [[name: '*/dev']],
-                userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
-                extensions: [
-                  ['$class': 'CleanBeforeCheckout'],
-                  ['$class': 'CloneOption', noTags: false, shallow: true, depth: 1]
-                ]
-              ]
-              checkout(scmConfig)
-            '''
-            evaluate(checkoutScript)
-    - stage: "Dependence_Clean_Stage"
+        - echo "Cleaning up the Workspace"
+        - deleteDir()
+        - echo "Checking out the Repository"
+        - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
+
+    - stage: "Clean_Stage"
       steps:
+        - echo "Cleaning the Workspace"
         - bat 'mvn clean'
+
     - stage: "Build_Stage"
       steps:
+        - echo "Compiling the Project"
         - bat 'mvn compile'
+
     - stage: "Test_Stage"
       steps:
+        - echo "Testing the Project"
         - bat 'mvn test'
+
     - stage: "Package_Stage"
       steps:
+        - echo "Packaging the Project"
         - bat 'mvn package'
+
     - stage: "Execute_Stage"
       steps:
+        - echo "Executing the Package"
         - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
-    - stage: "Docker_Stage"
-      steps:
-        - bat 'docker build -t Jhelloworld-app:${BUILD_NUMBER} .'
-        - bat 'docker tag Jhelloworld-app:${BUILD_NUMBER} ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
-        - bat 'docker tag Jhelloworld-app:${BUILD_NUMBER} ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
-        - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
-        - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
   post:
     always:
       - echo "Performing Cleanup of Workspace"
