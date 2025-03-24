@@ -1,0 +1,24 @@
+pipeline:
+  agent: any
+  
+  # Import stage templates
+  imports:
+    - templates/stages/checkout.yaml
+    - templates/stages/clean.yaml
+    - templates/stages/build.yaml
+    - templates/stages/test.yaml
+    - templates/stages/package.yaml
+    - templates/stages/execute.yaml
+    - templates/post/cleanup.yaml
+  
+  # Define the pipeline using the imported templates
+  stages:
+    - !include checkout_template
+    - !include clean_template
+    - !include build_template
+    - !include test_template
+    - !include package_template
+    - !include execute_template
+  
+  # Include post actions
+  post: !include cleanup_template.post
