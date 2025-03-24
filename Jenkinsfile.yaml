@@ -3,10 +3,21 @@ pipeline:
   stages:
     - stage: "Checkout_Stage"
       steps:
-        - script: |
-            def checkoutScript = load 'scripts/checkoutScript.groovy'
-            checkoutScript.doCheckout()
-            
+        - script: >
+            def checkoutScript = '''
+              echo "Checking out the repository"
+              def scmConfig = [
+                '$class': 'GitSCM',
+                branches: [[name: '*/dev']],
+                userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
+                extensions: [
+                  ['$class': 'CleanBeforeCheckout'],
+                  ['$class': 'CloneOption', noTags: false, shallow: true, depth: 1]
+                ]
+              ]
+              checkout(scmConfig)
+            '''
+            evaluate(checkoutScript)
     - stage: "Dependence_Clean_Stage"
       steps:
         - bat 'mvn clean'
