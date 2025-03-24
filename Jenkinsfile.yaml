@@ -5,56 +5,44 @@ pipeline:
   stages:
     - stage: "Checkout_Stage"
       steps:
-        - echo "Checking out the Repository"
-        - checkout:
-            scm:
-              $class: 'GitSCM'
-              branches:
-                - name: "*/dev"
-              userRemoteConfigs:
-                - url: "https://github.com/JAYNILSONI/Jenkins_Pipelines.git"
-              extensions:
-                - $class: 'CleanBeforeCheckout'
-                - $class: 'CloneOption'
-                  noTags: false
-                  shallow: true
-                  depth: 1
+        - script: |
+            echo "Checking out the Repository"
+            def scmConfig = [
+              \$class: 'GitSCM',
+              branches: [[name: '*/dev']],
+              userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']],
+              extensions: [
+                [\$class: 'CleanBeforeCheckout'],
+                [\$class: 'CloneOption', noTags: false, shallow: true, depth: 1]
+              ]
+            ]
+            checkout(scmConfig)
 
     - stage: "Dependence_Clean_Stage"
       steps:
-        - echo "Cleaning the Workspace Dependence files"
         - bat 'mvn clean'
 
     - stage: "Build_Stage"
       steps:
-        - echo "Compiling the Project"
         - bat 'mvn compile'
 
     - stage: "Test_Stage"
       steps:
-        - echo "Testing the Project"
         - bat 'mvn test'
 
     - stage: "Package_Stage"
       steps:
-        - echo "Packaging the Project"
         - bat 'mvn package'
 
     - stage: "Execute_Stage"
       steps:
-        - echo "Executing the Package"
         - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
         
     - stage: "Docker_Stage"
       steps:
-        - echo "Building Docker Image"
         - bat 'docker build -t Jhelloworld-app:${BUILD_NUMBER} .'
-        
-        - echo "Tagging Docker Image"
         - bat 'docker tag Jhelloworld-app:${BUILD_NUMBER} ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
         - bat 'docker tag Jhelloworld-app:${BUILD_NUMBER} ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
-        
-        - echo "Pushing Docker Image to Registry"
         - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:${BUILD_NUMBER}'
         - bat 'docker push ${DOCKER_REGISTRY}/Jhelloworld-app:latest'
 
