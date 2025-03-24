@@ -4,10 +4,10 @@ pipeline:
 
   stages:
 
-    - stage: "Checkout_Stage"
-      steps:
-        - echo "Checking out the Repository"
-        - checkout scm
+    # - stage: "Checkout_Stage"
+    #   steps:
+    #     - echo "Checking out the Repository"
+    #     - checkout scm
 
     - stage: "Dependence_Clean_Stage"
       steps:
