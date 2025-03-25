@@ -3,61 +3,56 @@ pipeline:
     label: 'Agent'
   
   stages:
-    - stage: Version_Check_Stage
+    - stage: Prepare
       steps:
-        - script: |
-            node('Agent') {
-              sh '''
-                echo "Java Version:"
-                java -version
-                
-                echo "\nMaven Version:"
-                mvn --version
-              '''
-            }
+        - sh: |
+            echo "Workspace Preparation"
+            pwd
+            whoami
     
-    - stage: Checkout_Stage
+    - stage: Version_Check
       steps:
-        - script: |
-            node('Agent') {
-              echo "Cleaning up the Workspace"
-              deleteDir()
-              echo "Checking out the Repository"
-              checkout scmGit(
-                branches: [[name: '*/dev']], 
-                extensions: [], 
-                userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']]
-              )
-            }
+        - sh: |
+            echo "System Versions:"
+            java -version
+            mvn --version
     
-    - stage: Package_Stage
+    - stage: Checkout
       steps:
-        - script: |
-            node('Agent') {
-              echo "Packaging the Project"
-              sh 'mvn package'
-            }
+        - checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']])
     
-    - stage: Deploy_Stage
+    - stage: Build
       steps:
-        - script: |
-            node('Agent') {
-              echo "Deploying to Production"
-              sh 'mvn deploy'
-            }
+        - sh: |
+            echo "Cleaning and Compiling Project"
+            mvn clean compile
+    
+    - stage: Test
+      steps:
+        - sh: |
+            echo "Running Project Tests"
+            mvn test
+    
+    - stage: Package
+      steps:
+        - sh: |
+            echo "Creating Project Package"
+            mvn package -DskipTests=true
+    
+    - stage: Deploy
+      steps:
+        - sh: |
+            echo "Deploying Artifact"
+            mvn deploy -DskipTests=true
   
   post:
-    always:
-      - script: |
-          node('Agent') {
-            echo "Performing Final Cleanup"
-            deleteDir()
-          }
-    
     success:
-      - script: |
-          echo "Pipeline completed successfully"
+      - sh: echo "Pipeline Executed Successfully"
     
     failure:
-      - script: |
-          echo "Pipeline failed"
+      - sh: echo "Pipeline Execution Failed"
+    
+    always:
+      - sh: |
+          echo "Cleaning Workspace"
+          rm -rf ${WORKSPACE}/*
