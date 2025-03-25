@@ -2,97 +2,40 @@ pipeline:
   agent:
     any: true
   
-  parameters:
-    - string:
-        name: BRANCH_NAME
-        defaultValue: 'main'
-        description: 'Branch to build and deploy'
-        trim: true
-  
-  stages:
-    - stage: "Checkout_Stage"
-      steps:
-        - echo: "Cleaning up the Workspace"
-        - deleteDir()
-        - echo: "Checking out the Repository"
-        - bat: 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
-        - bat: "git checkout ${BRANCH_NAME}"
-    
-    - stage: "Validate_Branch"
-      steps:
-        - shell: |
-            #!/bin/bash
-            BRANCH_NAME="${BRANCH_NAME}"
-            
-            # Define valid branch patterns
-            VALID_DEV_BRANCHES=("develop" "dev" "feature/*")
-            VALID_MAIN_BRANCHES=("main" "master" "release/*")
-            
-            # Check if branch is valid
-            IS_DEV_BRANCH=false
-            IS_MAIN_BRANCH=false
-            
-            for pattern in "${VALID_DEV_BRANCHES[@]}"; do
-              if [[ "$BRANCH_NAME" == $pattern || "$BRANCH_NAME" =~ ^${pattern/\*/.*}$ ]]; then
-                IS_DEV_BRANCH=true
-                break
-              fi
-            done
-            
-            for pattern in "${VALID_MAIN_BRANCHES[@]}"; do
-              if [[ "$BRANCH_NAME" == $pattern || "$BRANCH_NAME" =~ ^${pattern/\*/.*}$ ]]; then
-                IS_MAIN_BRANCH=true
-                break
-              fi
-            done
-            
-            # Output branch type
-            if [ "$IS_DEV_BRANCH" = true ]; then
-              echo "Development branch detected: $BRANCH_NAME"
-            elif [ "$IS_MAIN_BRANCH" = true ]; then
-              echo "Main branch detected: $BRANCH_NAME"
-            else
-              echo "Error: Unsupported branch: $BRANCH_NAME"
-              exit 1
-            fi
-    
-    - stage: "Dev_Specific_Stages"
-      when:
-        expression: >
-          ${BRANCH_NAME} == 'develop' || 
-          ${BRANCH_NAME} == 'dev' || 
-          ${BRANCH_NAME}.startsWith('feature/')
-      steps:
-        - echo: "Running Dev-specific stages"
-        - bat: 'mvn clean'
-        - bat: 'mvn compile'
-        - bat: 'mvn test'
-    
-    - stage: "Main_Branches_Stages"
-      when:
-        expression: >
-          ${BRANCH_NAME} == 'main' || 
-          ${BRANCH_NAME} == 'master' || 
-          ${BRANCH_NAME}.startsWith('release/')
-      steps:
-        - echo: "Running Main branch stages"
-        - bat: 'mvn clean verify'
-        - bat: 'mvn package'
-    
-    - stage: "Package_Stage"
-      steps:
-        - echo: "Packaging the Project"
-        - bat: 'mvn package'
-    
-    - stage: "Deploy_Stage"
-      when:
-        expression: >
-          ${BRANCH_NAME} == 'main' || 
-          ${BRANCH_NAME} == 'master' || 
-          ${BRANCH_NAME}.startsWith('release/')
-      steps:
-        - echo: "Deploying to Production"
-        - bat: 'mvn deploy'
+  node('Agent') {
+    stages:
+      - stage: "Version_Check_Stage"
+        steps:
+          - script: |
+              sh '''
+                echo "Java Version:"
+                java -version
+                
+                echo "\nMaven Version:"
+                mvn --version
+              '''
+      
+      - stage: "Checkout_Stage"
+        steps:
+          - echo: "Cleaning up the Workspace"
+          - deleteDir()
+          - echo: "Checking out the Repository"
+          - checkout: scmGit(
+              branches: [[name: '*/dev']], 
+              extensions: [], 
+              userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']]
+            )
+      
+      - stage: "Package_Stage"
+        steps:
+          - echo: "Packaging the Project"
+          - sh: 'mvn package'
+      
+      - stage: "Deploy_Stage"
+        steps:
+          - echo: "Deploying to Production"
+          - sh: 'mvn deploy'
+  }
   
   post:
     always:
@@ -100,7 +43,7 @@ pipeline:
       - deleteDir()
     
     success:
-      - echo: "Pipeline completed successfully for branch: ${BRANCH_NAME}"
+      - echo: "Pipeline completed successfully"
     
     failure:
-      - echo: "Pipeline failed for branch: ${BRANCH_NAME}"
+      - echo: "Pipeline failed"
