@@ -1,7 +1,7 @@
 pipeline:
   agent:
     node:
-      label: 'Agent'
+      label: 'Maven'
   stages:
     - stage: "Checkout_Stage"
       steps:
