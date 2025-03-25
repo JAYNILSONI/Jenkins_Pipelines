@@ -1,38 +1,40 @@
 pipeline:
   agent:
-    any: true
+    node:
+      label: 'Agent'
   stages:
     - stage: "Checkout_Stage"
       steps:
         - echo "Cleaning up the Workspace"
         - deleteDir()
         - echo "Checking out the Repository"
-        - git(url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git', branch: 'dev')
+        - git https://github.com/JAYNILSONI/Jenkins_Pipelines.git
+          - branch: 'dev'
     
     - stage: "Clean_Stage"
       steps:
         - echo "Cleaning the Workspace"
-        - bat 'mvn clean'
+        - sh 'mvn clean'
     
     - stage: "Build_Stage"
       steps:
         - echo "Compiling the Project"
-        - bat 'mvn compile'
+        - sh 'mvn compile'
     
     - stage: "Test_Stage"
       steps:
         - echo "Testing the Project"
-        - bat 'mvn test'
+        - sh 'mvn test'
     
     - stage: "Package_Stage"
       steps:
         - echo "Packaging the Project"
-        - bat 'mvn package'
+        - sh 'mvn package'
     
     - stage: "Execute_Stage"
       steps:
         - echo "Executing the Package"
-        - bat 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
+        - sh 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
   
   post:
     always:
