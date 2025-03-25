@@ -1,12 +1,12 @@
 pipeline:
   agent:
-    any: true
+    label: 'Agent'
   
-  node('Agent') {
-    stages:
-      - stage: "Version_Check_Stage"
-        steps:
-          - script: |
+  stages:
+    - stage: Version_Check_Stage
+      steps:
+        - script: |
+            node('Agent') {
               sh '''
                 echo "Java Version:"
                 java -version
@@ -14,36 +14,50 @@ pipeline:
                 echo "\nMaven Version:"
                 mvn --version
               '''
-      
-      - stage: "Checkout_Stage"
-        steps:
-          - echo: "Cleaning up the Workspace"
-          - deleteDir()
-          - echo: "Checking out the Repository"
-          - checkout: scmGit(
-              branches: [[name: '*/dev']], 
-              extensions: [], 
-              userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']]
-            )
-      
-      - stage: "Package_Stage"
-        steps:
-          - echo: "Packaging the Project"
-          - sh: 'mvn package'
-      
-      - stage: "Deploy_Stage"
-        steps:
-          - echo: "Deploying to Production"
-          - sh: 'mvn deploy'
-  }
+            }
+    
+    - stage: Checkout_Stage
+      steps:
+        - script: |
+            node('Agent') {
+              echo "Cleaning up the Workspace"
+              deleteDir()
+              echo "Checking out the Repository"
+              checkout scmGit(
+                branches: [[name: '*/dev']], 
+                extensions: [], 
+                userRemoteConfigs: [[url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git']]
+              )
+            }
+    
+    - stage: Package_Stage
+      steps:
+        - script: |
+            node('Agent') {
+              echo "Packaging the Project"
+              sh 'mvn package'
+            }
+    
+    - stage: Deploy_Stage
+      steps:
+        - script: |
+            node('Agent') {
+              echo "Deploying to Production"
+              sh 'mvn deploy'
+            }
   
   post:
     always:
-      - echo: "Performing Final Cleanup"
-      - deleteDir()
+      - script: |
+          node('Agent') {
+            echo "Performing Final Cleanup"
+            deleteDir()
+          }
     
     success:
-      - echo: "Pipeline completed successfully"
+      - script: |
+          echo "Pipeline completed successfully"
     
     failure:
-      - echo: "Pipeline failed"
+      - script: |
+          echo "Pipeline failed"
