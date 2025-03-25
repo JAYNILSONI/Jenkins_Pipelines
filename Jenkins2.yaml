@@ -1,7 +1,7 @@
 pipeline:
  # Define Agent. Master will be used for this pipeline
  agent:
-   label: 'Agent'
+   any: true
 
  # Defines stages
  stages:
@@ -18,12 +18,12 @@ pipeline:
        - stage: Build
          steps:
            # Use 'sh' step for running maven commands
-           - sh 'mvn clean compile'
+           - bat 'mvn clean compile'
        - stage: Test
          steps:
            # Use script as well
            script:
-             - sh "mvn clean test"
+             - bat "mvn clean test"
  # Define post actions
  post:
    always:
