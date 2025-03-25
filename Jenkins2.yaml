@@ -2,9 +2,7 @@ pipeline:
  # Define Agent. Master will be used for this pipeline
  agent:
    label: 'Agent'
- # Define tool for Maven. This tool must be defined in Jenkins configuration
- tools:
-   maven: default
+
  # Defines stages
  stages:
    # Define checkout stage
