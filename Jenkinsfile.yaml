@@ -7,7 +7,7 @@ pipeline:
         - echo "Cleaning up the Workspace"
         - deleteDir()
         - echo "Checking out the Repository"
-        - git url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git', branch: 'dev'
+        - git(url: 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git', branch: 'dev')
     
     - stage: "Clean_Stage"
       steps:
