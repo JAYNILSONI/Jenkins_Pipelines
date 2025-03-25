@@ -1,7 +1,7 @@
 pipeline:
- # Define Agent. Master will be used for this pipeline
- agent:
-   any: true
+  agent:
+    node:
+      label: 'label'
 
  # Defines stages
  stages:
