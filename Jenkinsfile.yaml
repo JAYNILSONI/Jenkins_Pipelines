@@ -1,6 +1,6 @@
 pipeline:
   agent:
-    label: Agent
+    any: true
 
   stages:
 
@@ -9,7 +9,7 @@ pipeline:
         - echo "Cleaning up the Workspace"
         - deleteDir()
         - echo "Checking out the Repository"
-        - bat 'git clone https://github.com/JAYNILSONI/Jenkins_Pipelines.git .'
+        - git 'https://github.com/JAYNILSONI/Jenkins_Pipelines.git'
 
     - stage: "Clean_Stage"
       steps:
