@@ -20,12 +20,13 @@ pipeline:
     - stage: Checkout
       steps:
         - checkout:
-          scmGit:
-            branches:
-              - name: "*/main"
-            extensions: []
-            userRemoteConfigs:
-              - url: "https://github.com/JAYNILSONI/Jenkins_Pipelines.git"
+            scmGit:
+              branches:
+                - name: "*/main"
+              extensions: []
+              userRemoteConfigs:
+                - url: "https://github.com/JAYNILSONI/Jenkins_Pipelines.git"
+
 
     
     - stage: Build
