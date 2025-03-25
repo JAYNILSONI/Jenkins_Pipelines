@@ -7,33 +7,29 @@ pipeline:
         - echo "Cleaning up the Workspace"
         - deleteDir()
         - echo "Checking out the Repository"
-        - git 'https://github.com/JAYNILSONI/Jenkins_Pipelines/tree/dev'
-    
+        - git:
+            branch: "dev"
+            url: "https://github.com/JAYNILSONI/Jenkins_Pipelines.git"
     - stage: "Clean_Stage"
       steps:
         - echo "Cleaning the Workspace"
         - sh 'mvn clean'
-    
     - stage: "Build_Stage"
       steps:
         - echo "Compiling the Project"
         - sh 'mvn compile'
-    
     - stage: "Test_Stage"
       steps:
         - echo "Testing the Project"
         - sh 'mvn test'
-    
     - stage: "Package_Stage"
       steps:
         - echo "Packaging the Project"
         - sh 'mvn package'
-    
     - stage: "Execute_Stage"
       steps:
         - echo "Executing the Package"
         - sh 'java -cp target/helloworld-1.0-SNAPSHOT.jar com.example.App'
-  
   post:
     always:
       - echo "Performing Cleanup of Workspace"
